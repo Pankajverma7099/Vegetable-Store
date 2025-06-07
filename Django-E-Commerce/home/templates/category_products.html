@@ -1,0 +1,101 @@
+{% extends 'homebase.html' %}
+{% load currency %}
+{% block title %}{{ catdata.title }} Products{% endblock %}
+{% block description %}{{ catdata.description }}{% endblock %}
+{% block keywords %}{{ category.keywords }}{% endblock %}
+{% block sidebar %}
+    {% include 'sidebar.html' %}
+{% endblock %}
+{% block body %}
+    <!-- BREADCRUMBs -->
+    <div id="breadcrumb">
+        <div class="container">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="{% url 'home' %}">Home</a>
+                </li>
+                <li class="active">{{ catdata.title }} Products</li>
+            </ul>
+        </div>
+    </div>
+    <!-- /BREADCRUMB -->
+    <!-- section -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <!-- MAIN -->
+                <div id="main" class="col-md-12">
+                    <!-- STORE -->
+                    <div id="store">
+                        <!-- row -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="order-summary clearfix">
+                                    <div class="section-title">
+                                        <h3 class="title">Product List</h3>
+                                    </div>
+                                    <table class="shopping-cart-table table">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th></th>
+                                                <th class="text-center">Price</th>
+                                                <th class="text-center">Quantity</th>
+                                                <th class="text-right"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for rs in products %}
+                                                <tr>
+                                                    <td class="thumb">
+                                                        <a href="{% url 'product_detail' rs.id rs.slug %}">
+                                                            <img src="{{ rs.image.url }}" alt="" style="height: 100px">
+                                                        </a>
+                                                    </td>
+                                                    <td class="details">
+                                                        <a href="{% url 'product_detail' rs.id rs.slug %}">{{ rs.title }}</a>
+                                                    </td>
+                                                    <td class="price text-center">
+                                                        <strong>{{ request.session.currency }} {{ rs.price|currency:request.session.currency }}</strong>
+                                                        <br>
+                                                        {% comment %} <del class="font-weak"><small>$40.00</small></del> {% endcomment %}
+                                                    </td>
+                                                    <td class="qty text-center">
+                                                        <input class="input" type="number" value="1">
+                                                    </td>
+                                                    <td class="text-right">
+                                                        {% comment %} <a href="" class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> View Details</a> {% endcomment %}
+                                                        {% if rs.variant == 'None' %}
+                                                            {% if rs.amount < 1  %}
+                                                                <a href='#'
+                                                                   class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart  </a>
+                                                            {% else %}
+                                                                <a href='{% url "addtoshopcart" rs.id  %}'
+                                                                   class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Add to Cart  </a>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <a href="{% url 'product_detail' rs.id rs.slug %}"
+                                                               class="primary-btn add-to-cart"><i class="fa fa-shopping-cart"></i> Detail</a>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /row -->
+                    </div>
+                    <!-- /STORE -->
+                </div>
+                <!-- /MAIN -->
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /section -->
+{% endblock %}
